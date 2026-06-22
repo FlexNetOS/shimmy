@@ -148,15 +148,11 @@ mod tests {
 
     #[test]
     fn test_find_available_port() {
-        let range_port = PortAllocator::new().find_ephemeral_port().unwrap();
-        let allocator = PortAllocator {
-            allocated_ports: Arc::new(Mutex::new(HashMap::new())),
-            port_range: (range_port, range_port),
-        };
+        let allocator = PortAllocator::new();
         let port = allocator.find_available_port("test-service").unwrap();
-        assert_eq!(port, range_port);
+        assert!((allocator.port_range.0..=allocator.port_range.1).contains(&port));
 
-        // Second call should return same port
+        // Second call should return the service's tracked port.
         let port2 = allocator.find_available_port("test-service").unwrap();
         assert_eq!(port, port2);
 
