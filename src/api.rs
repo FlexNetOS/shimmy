@@ -401,17 +401,6 @@ pub async fn execute_tool(
     .into_response()
 }
 
-#[allow(dead_code)] // route stub — reserved for future workflow execution; not yet registered in router
-pub async fn execute_workflow(
-    State(_state): State<Arc<AppState>>,
-    Json(_request): Json<serde_json::Value>,
-) -> impl IntoResponse {
-    Json(serde_json::json!({
-        "message": "Workflow execution not yet implemented",
-        "status": "pending"
-    }))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -652,22 +641,6 @@ mod tests {
         // Exercise execute_tool handler (lines 246-250)
         let _result =
             execute_tool(State(state), Path("test-tool".to_string()), Json(arguments)).await;
-        // Test completed successfully
-    }
-
-    #[tokio::test]
-    async fn test_execute_workflow_handler_execution() {
-        use crate::engine::adapter::InferenceEngineAdapter;
-        use crate::model_registry::Registry;
-
-        let registry = Registry::default();
-        let engine = Box::new(InferenceEngineAdapter::new());
-        let state = Arc::new(AppState::new(engine, registry));
-
-        let request = serde_json::json!({"workflow": "test"});
-
-        // Exercise execute_workflow handler (lines 253-258)
-        let _result = execute_workflow(State(state), Json(request)).await;
         // Test completed successfully
     }
 
