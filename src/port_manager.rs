@@ -148,9 +148,13 @@ mod tests {
 
     #[test]
     fn test_find_available_port() {
-        let allocator = PortAllocator::new();
+        let range_port = PortAllocator::new().find_ephemeral_port().unwrap();
+        let allocator = PortAllocator {
+            allocated_ports: Arc::new(Mutex::new(HashMap::new())),
+            port_range: (range_port, range_port),
+        };
         let port = allocator.find_available_port("test-service").unwrap();
-        assert!(port >= 11435);
+        assert_eq!(port, range_port);
 
         // Second call should return same port
         let port2 = allocator.find_available_port("test-service").unwrap();
