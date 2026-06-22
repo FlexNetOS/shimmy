@@ -211,7 +211,9 @@ mod tests {
     #[test]
     fn test_tool_registry_creation() {
         let registry = ToolRegistry::new();
-        assert!(registry.tools.len() >= 3);
+        assert_eq!(registry.tools.len(), 2);
+        assert!(registry.tool("calculator").is_some());
+        assert!(registry.tool("file_read").is_some());
     }
 
     #[test]
