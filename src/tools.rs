@@ -40,7 +40,6 @@ impl ToolRegistry {
         // Register built-in tools
         registry.register(Box::new(CalculatorTool));
         registry.register(Box::new(FileReadTool));
-        registry.register(Box::new(HttpGetTool));
 
         registry
     }
@@ -199,43 +198,6 @@ impl Tool for FileReadTool {
     }
 }
 
-pub struct HttpGetTool;
-
-impl Tool for HttpGetTool {
-    fn definition(&self) -> ToolDefinition {
-        ToolDefinition {
-            name: "http_get".to_string(),
-            description: "Make an HTTP GET request".to_string(),
-            parameters: serde_json::json!({
-                "type": "object",
-                "properties": {
-                    "url": {
-                        "type": "string",
-                        "description": "URL to fetch"
-                    }
-                },
-                "required": ["url"]
-            }),
-        }
-    }
-
-    fn execute(&self, arguments: serde_json::Value) -> Result<ToolResult> {
-        let _url = arguments
-            .get("url")
-            .and_then(|v| v.as_str())
-            .ok_or_else(|| ShimmyError::MissingParameter {
-                parameter: "url".to_string(),
-            })?;
-
-        // Placeholder - in production this would make actual HTTP requests
-        Ok(ToolResult {
-            success: false,
-            result: serde_json::Value::Null,
-            error: Some("HTTP requests not implemented yet".to_string()),
-        })
-    }
-}
-
 impl Default for ToolRegistry {
     fn default() -> Self {
         Self::new()
@@ -302,13 +264,6 @@ mod tests {
         let file_tool = FileReadTool;
         let def = file_tool.definition();
         assert_eq!(def.name, "file_read");
-    }
-
-    #[test]
-    fn test_http_get_tool_definition() {
-        let http_tool = HttpGetTool;
-        let def = http_tool.definition();
-        assert_eq!(def.name, "http_get");
     }
 
     #[test]

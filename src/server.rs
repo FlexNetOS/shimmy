@@ -145,7 +145,6 @@ pub async fn run(addr: SocketAddr, state: Arc<AppState>) -> anyhow::Result<()> {
         .route("/api/models/:name/status", get(api::model_status))
         .route("/api/tools", get(api::list_tools))
         .route("/api/tools/:name/execute", post(api::execute_tool))
-        .route("/api/workflows/execute", post(api::execute_workflow))
         .route("/ws/generate", get(api::ws_generate))
         .route(
             "/v1/chat/completions",
